@@ -2,24 +2,29 @@
 session_start();
 error_reporting(0);
 include("include/config.php");
-//Checking Details for reset password
-if(isset($_POST['submit'])){
-$contactno=$_POST['contactno'];
-$email=$_POST['email'];
-$query=mysqli_query($con,"select id from  doctors where contactno='$contactno' and docEmail='$email'");
-$row=mysqli_num_rows($query);
-if($row>0){
-
-$_SESSION['cnumber']=$contactno;
-$_SESSION['email']=$email;
-header('location:reset-password.php');
-} else {
-echo "<script>alert('Invalid details. Please try with valid details');</script>";
-echo "<script>window.location.href ='forgot-password.php'</script>";
-
-
+if(isset($_POST['submit']))
+{
+$ret=mysqli_query($con,"SELECT * FROM admin WHERE username='".$_POST['username']."' and password='".$_POST['password']."'");
+$num=mysqli_fetch_array($ret);
+if($num>0)
+{
+$extra="dashboard.php";//
+$_SESSION['login']=$_POST['username'];
+$_SESSION['id']=$num['id'];
+$host=$_SERVER['HTTP_HOST'];
+$uri=rtrim(dirname($_SERVER['PHP_SELF']),'/\\');
+header("location:http://$host$uri/$extra");
+exit();
 }
-
+else
+{
+$_SESSION['errmsg']="Invalid username or password";
+$extra="index.php";
+$host  = $_SERVER['HTTP_HOST'];
+$uri  = rtrim(dirname($_SERVER['PHP_SELF']),'/\\');
+header("location:http://$host$uri/$extra");
+exit();
+}
 }
 ?>
 
@@ -27,8 +32,13 @@ echo "<script>window.location.href ='forgot-password.php'</script>";
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Password Recovery</title>
-		
+		<title>Admin-Login</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta content="" name="description" />
+		<meta content="" name="author" />
 		<link href="http://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
 		<link rel="stylesheet" href="vendor/fontawesome/css/font-awesome.min.css">
@@ -44,45 +54,36 @@ echo "<script>window.location.href ='forgot-password.php'</script>";
 		<div class="row">
 			<div class="main-login col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4">
 				<div class="logo margin-top-30">
-				<a href="../../index.html"><h2> HMS | Doctor Password Recovery</h2></a>
+				<h2>Admin Login</h2>
 				</div>
 
 				<div class="box-login">
 					<form class="form-login" method="post">
 						<fieldset>
 							<legend>
-								Doctor Password Recovery
+								Sign in to your account
 							</legend>
 							<p>
-								Please enter your  Contact number and Email to recover your password.<br />
-					
+								Please enter your name and password to log in.<br />
+								<span style="color:red;"><?php echo htmlentities($_SESSION['errmsg']); ?><?php echo htmlentities($_SESSION['errmsg']="");?></span>
 							</p>
-
-							<div class="form-group form-actions">
-								<span class="input-icon">
-									<input type="text" class="form-control" name="contactno" placeholder="Registred Contact Number">
-									<i class="fa fa-lock"></i>
-									 </span>
-							</div>
-
 							<div class="form-group">
 								<span class="input-icon">
-									<input type="email" class="form-control" name="email" placeholder="Registred Email">
+									<input type="text" class="form-control" name="username" placeholder="Username">
 									<i class="fa fa-user"></i> </span>
 							</div>
-
+							<div class="form-group form-actions">
+								<span class="input-icon">
+									<input type="password" class="form-control password" name="password" placeholder="Password"><i class="fa fa-lock"></i>
+									 </span>
+							</div>
 							<div class="form-actions">
 								
 								<button type="submit" class="btn btn-primary pull-right" name="submit">
-									Reset <i class="fa fa-arrow-circle-right"></i>
+									Login <i class="fa fa-arrow-circle-right"></i>
 								</button>
 							</div>
-							<div class="new-account">
-								Already have an account? 
-								<a href="index.php">
-									Log-in
-								</a>
-							</div>
+							
 						</fieldset>
 					</form>
 

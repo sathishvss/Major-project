@@ -3,27 +3,24 @@ session_start();
 error_reporting(0);
 include('include/config.php');
 include('include/checklogin.php');
+check_login();
 if(isset($_POST['submit']))
 {
-	$docspecialization=$_POST['Doctorspecialization'];
-$docname=$_POST['docname'];
-$docaddress=$_POST['clinicaddress'];
-$docfees=$_POST['docfees'];
-$doccontactno=$_POST['doccontact'];
-$docemail=$_POST['docemail'];
-$sql=mysqli_query($con,"Update doctors set specilization='$docspecialization',doctorName='$docname',address='$docaddress',docFees='$docfees',contactno='$doccontactno' where id='".$_SESSION['id']."'");
-if($sql)
-{
-echo "<script>alert('Doctor Details updated Successfully');</script>";
+$sql=mysqli_query($con,"insert into doctorSpecilization(specilization) values('".$_POST['doctorspecilization']."')");
+$_SESSION['msg']="Doctor Specialization added successfully !!";
+}
 
-}
-}
+if(isset($_GET['del']))
+		  {
+		          mysqli_query($con,"delete from doctorSpecilization where id = '".$_GET['id']."'");
+                  $_SESSION['msg']="data deleted !!";
+		  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Doctr | Edit Doctor Details</title>
-		
+		<title>Admin | Doctor Specialization</title>
+	
 		<link href="http://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
 		<link rel="stylesheet" href="vendor/fontawesome/css/font-awesome.min.css">
@@ -38,28 +35,29 @@ echo "<script>alert('Doctor Details updated Successfully');</script>";
 		<link rel="stylesheet" href="assets/css/styles.css">
 		<link rel="stylesheet" href="assets/css/plugins.css">
 		<link rel="stylesheet" href="assets/css/themes/theme-1.css" id="skin_color" />
-
-
 	</head>
 	<body>
 		<div id="app">		
 <?php include('include/sidebar.php');?>
 			<div class="app-content">
-				<?php include('include/header.php');?>
+				
+						<?php include('include/header.php');?>
+					
+				<!-- end: TOP NAVBAR -->
 				<div class="main-content" >
 					<div class="wrap-content container" id="container">
 						<!-- start: PAGE TITLE -->
 						<section id="page-title">
 							<div class="row">
 								<div class="col-sm-8">
-									<h1 class="mainTitle">Doctor | Edit Doctor Details</h1>
+									<h1 class="mainTitle">Admin | Add Doctor Specialization</h1>
 																	</div>
 								<ol class="breadcrumb">
 									<li>
-										<span>Doctor</span>
+										<span>Admin</span>
 									</li>
 									<li class="active">
-										<span>Edit Doctor Details</span>
+										<span>Add Doctor Specialization</span>
 									</li>
 								</ol>
 							</div>
@@ -71,85 +69,27 @@ echo "<script>alert('Doctor Details updated Successfully');</script>";
 								<div class="col-md-12">
 									
 									<div class="row margin-top-30">
-										<div class="col-lg-8 col-md-12">
+										<div class="col-lg-6 col-md-12">
 											<div class="panel panel-white">
 												<div class="panel-heading">
-													<h5 class="panel-title">Edit Doctor</h5>
+													<h5 class="panel-title">Doctor Specialization</h5>
 												</div>
 												<div class="panel-body">
-									<?php $sql=mysqli_query($con,"select * from doctors where docEmail='".$_SESSION['dlogin']."'");
-while($data=mysqli_fetch_array($sql))
-{
-?>
-<h4><?php echo htmlentities($data['doctorName']);?>'s Profile</h4>
-<p><b>Profile Reg. Date: </b><?php echo htmlentities($data['creationDate']);?></p>
-<?php if($data['updationDate']){?>
-<p><b>Profile Last Updation Date: </b><?php echo htmlentities($data['updationDate']);?></p>
-<?php } ?>
-<hr />
-													<form role="form" name="adddoc" method="post" onSubmit="return valid();">
+								<p style="color:red;"><?php echo htmlentities($_SESSION['msg']);?>
+								<?php echo htmlentities($_SESSION['msg']="");?></p>	
+													<form role="form" name="dcotorspcl" method="post" >
 														<div class="form-group">
-															<label for="DoctorSpecialization">
+															<label for="exampleInputEmail1">
 																Doctor Specialization
 															</label>
-							<select name="Doctorspecialization" class="form-control" required="required">
-					<option value="<?php echo htmlentities($data['specilization']);?>">
-					<?php echo htmlentities($data['specilization']);?></option>
-<?php $ret=mysqli_query($con,"select * from doctorspecilization");
-while($row=mysqli_fetch_array($ret))
-{
-?>
-																<option value="<?php echo htmlentities($row['specilization']);?>">
-																	<?php echo htmlentities($row['specilization']);?>
-																</option>
-																<?php } ?>
-																
-															</select>
+							<input type="text" name="doctorspecilization" class="form-control"  placeholder="Enter Doctor Specialization">
 														</div>
-
-<div class="form-group">
-															<label for="doctorname">
-																 Doctor Name
-															</label>
-	<input type="text" name="docname" class="form-control" value="<?php echo htmlentities($data['doctorName']);?>" >
-														</div>
-
-
-<div class="form-group">
-															<label for="address">
-																 Doctor Clinic Address
-															</label>
-					<textarea name="clinicaddress" class="form-control"><?php echo htmlentities($data['address']);?></textarea>
-														</div>
-<div class="form-group">
-															<label for="fess">
-																 Doctor Consultancy Fees
-															</label>
-		<input type="text" name="docfees" class="form-control" required="required"  value="<?php echo htmlentities($data['docFees']);?>" >
-														</div>
-	
-<div class="form-group">
-									<label for="fess">
-																 Doctor Contact no
-															</label>
-					<input type="text" name="doccontact" class="form-control" required="required"  value="<?php echo htmlentities($data['contactno']);?>">
-														</div>
-
-<div class="form-group">
-									<label for="fess">
-																 Doctor Email
-															</label>
-					<input type="email" name="docemail" class="form-control"  readonly="readonly"  value="<?php echo htmlentities($data['docEmail']);?>">
-														</div>
-
-
-
+												
 														
-														<?php } ?>
 														
 														
 														<button type="submit" name="submit" class="btn btn-o btn-primary">
-															Update
+															Submit
 														</button>
 													</form>
 												</div>
@@ -158,16 +98,89 @@ while($row=mysqli_fetch_array($ret))
 											
 											</div>
 										</div>
+									<div class="col-lg-12 col-md-12">
+											<div class="panel panel-white">
+												
+												
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+								<div class="col-md-12">
+									<h5 class="over-title margin-bottom-15">Manage <span class="text-bold">Docter Specialization</span></h5>
 									
+									<table class="table table-hover" id="sample-table-1">
+										<thead>
+											<tr>
+												<th class="center">#</th>
+												<th>Specialization</th>
+												<th class="hidden-xs">Creation Date</th>
+												<th>Updation Date</th>
+												<th>Action</th>
+												
+											</tr>
+										</thead>
+										<tbody>
+<?php
+$sql=mysqli_query($con,"select * from doctorSpecilization");
+$cnt=1;
+while($row=mysqli_fetch_array($sql))
+{
+?>
+
+											<tr>
+												<td class="center"><?php echo $cnt;?>.</td>
+												<td class="hidden-xs"><?php echo $row['specilization'];?></td>
+												<td><?php echo $row['creationDate'];?></td>
+												<td><?php echo $row['updationDate'];?>
+												</td>
+												
+												<td >
+												<div class="visible-md visible-lg hidden-sm hidden-xs">
+							<a href="edit-doctor-specialization.php?id=<?php echo $row['id'];?>" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+													
+	<a href="doctor-specilization.php?id=<?php echo $row['id']?>&del=delete" onClick="return confirm('Are you sure you want to delete?')"class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="Remove"><i class="fa fa-times fa fa-white"></i></a>
+												</div>
+												<div class="visible-xs visible-sm hidden-md hidden-lg">
+													<div class="btn-group" dropdown is-open="status.isopen">
+														<button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
+															<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+														</button>
+														<ul class="dropdown-menu pull-right dropdown-light" role="menu">
+															<li>
+																<a href="#">
+																	Edit
+																</a>
+															</li>
+															<li>
+																<a href="#">
+																	Share
+																</a>
+															</li>
+															<li>
+																<a href="#">
+																	Remove
+																</a>
+															</li>
+														</ul>
+													</div>
+												</div></td>
+											</tr>
+											
+											<?php 
+$cnt=$cnt+1;
+											 }?>
+											
+											
+										</tbody>
+									</table>
 								</div>
-							
+							</div>
+								</div>
+							</div>
+						</div>
 						<!-- end: BASIC EXAMPLE -->
-			
-					
-					
-						
-						
-					
 						<!-- end: SELECT BOXES -->
 						
 					</div>
@@ -179,7 +192,7 @@ while($row=mysqli_fetch_array($ret))
 		
 			<!-- start: SETTINGS -->
 	<?php include('include/setting.php');?>
-			<>
+			
 			<!-- end: SETTINGS -->
 		</div>
 		<!-- start: MAIN JAVASCRIPTS -->

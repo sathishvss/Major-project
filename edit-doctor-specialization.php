@@ -4,12 +4,19 @@ error_reporting(0);
 include('include/config.php');
 include('include/checklogin.php');
 check_login();
+$id=intval($_GET['id']);// get value
+if(isset($_POST['submit']))
+{
+$docspecialization=$_POST['doctorspecilization'];
+$sql=mysqli_query($con,"update  doctorSpecilization set specilization='$docspecialization' where id='$id'");
+$_SESSION['msg']="Doctor Specialization updated successfully !!";
+} 
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Admin  | Dashboard</title>
+		<title>Admin | Edit Doctor Specialization</title>
 		
 		<link href="http://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
@@ -25,8 +32,6 @@ check_login();
 		<link rel="stylesheet" href="assets/css/styles.css">
 		<link rel="stylesheet" href="assets/css/plugins.css">
 		<link rel="stylesheet" href="assets/css/themes/theme-1.css" id="skin_color" />
-
-
 	</head>
 	<body>
 		<div id="app">		
@@ -34,7 +39,7 @@ check_login();
 			<div class="app-content">
 				
 						<?php include('include/header.php');?>
-						
+					
 				<!-- end: TOP NAVBAR -->
 				<div class="main-content" >
 					<div class="wrap-content container" id="container">
@@ -42,135 +47,75 @@ check_login();
 						<section id="page-title">
 							<div class="row">
 								<div class="col-sm-8">
-									<h1 class="mainTitle">Admin | Dashboard</h1>
+									<h1 class="mainTitle">Admin | Edit Doctor Specialization</h1>
 																	</div>
 								<ol class="breadcrumb">
 									<li>
 										<span>Admin</span>
 									</li>
 									<li class="active">
-										<span>Dashboard</span>
+										<span>Edit Doctor Specialization</span>
 									</li>
 								</ol>
 							</div>
 						</section>
 						<!-- end: PAGE TITLE -->
 						<!-- start: BASIC EXAMPLE -->
-							<div class="container-fluid container-fullw bg-white">
+						<div class="container-fluid container-fullw bg-white">
 							<div class="row">
-								<div class="col-sm-4">
-									<div class="panel panel-white no-radius text-center">
-										<div class="panel-body">
-											<span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-smile-o fa-stack-1x fa-inverse"></i> </span>
-											<h2 class="StepTitle">Manage Users</h2>
-											
-											<p class="links cl-effect-1">
-												<a href="manage-users.php">
-												<?php $result = mysqli_query($con,"SELECT * FROM users ");
-$num_rows = mysqli_num_rows($result);
-{
-?>
-											Total Users :<?php echo htmlentities($num_rows);  } ?>		
-												</a>
-											</p>
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="panel panel-white no-radius text-center">
-										<div class="panel-body">
-											<span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-users fa-stack-1x fa-inverse"></i> </span>
-											<h2 class="StepTitle">Manage Doctors</h2>
-										
-											<p class="cl-effect-1">
-												<a href="manage-doctors.php">
-												<?php $result1 = mysqli_query($con,"SELECT * FROM doctors ");
-$num_rows1 = mysqli_num_rows($result1);
-{
-?>
-											Total Doctors :<?php echo htmlentities($num_rows1);  } ?>		
-												</a>
+								<div class="col-md-12">
+									
+									<div class="row margin-top-30">
+										<div class="col-lg-6 col-md-12">
+											<div class="panel panel-white">
+												<div class="panel-heading">
+													<h5 class="panel-title">Edit Doctor Specialization</h5>
+												</div>
+												<div class="panel-body">
+								<p style="color:red;"><?php echo htmlentities($_SESSION['msg']);?>
+								<?php echo htmlentities($_SESSION['msg']="");?></p>	
+													<form role="form" name="dcotorspcl" method="post" >
+														<div class="form-group">
+															<label for="exampleInputEmail1">
+																Edit Doctor Specialization
+															</label>
+
+	<?php 
+
+$id=intval($_GET['id']);
+	$sql=mysqli_query($con,"select * from doctorSpecilization where id='$id'");
+while($row=mysqli_fetch_array($sql))
+{														
+	?>		<input type="text" name="doctorspecilization" class="form-control" value="<?php echo $row['specilization'];?>" >
+	<?php } ?>
+														</div>
 												
-											</p>
+														
+														
+														
+														<button type="submit" name="submit" class="btn btn-o btn-primary">
+															Update
+														</button>
+													</form>
+												</div>
+											</div>
 										</div>
-									</div>
-								</div>
-								<div class="col-sm-4">
-									<div class="panel panel-white no-radius text-center">
-										<div class="panel-body">
-											<span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-terminal fa-stack-1x fa-inverse"></i> </span>
-											<h2 class="StepTitle"> Appointments</h2>
 											
-											<p class="links cl-effect-1">
-												<a href="book-appointment.php">
-													<a href="appointment-history.php">
-												<?php $sql= mysqli_query($con,"SELECT * FROM appointment");
-$num_rows2 = mysqli_num_rows($sql);
-{
-?>
-											Total Appointments :<?php echo htmlentities($num_rows2);  } ?>	
-												</a>
-												</a>
-											</p>
+											</div>
+										</div>
+									<div class="col-lg-12 col-md-12">
+											<div class="panel panel-white">
+												
+												
+											</div>
 										</div>
 									</div>
+
+									
 								</div>
-
-<div class="col-sm-4">
-									<div class="panel panel-white no-radius text-center">
-										<div class="panel-body">
-											<span class="fa-stack fa-2x"> <i class="fa fa-square fa-stack-2x text-primary"></i> <i class="fa fa-smile-o fa-stack-1x fa-inverse"></i> </span>
-											<h2 class="StepTitle">Manage Patients</h2>
-											
-											<p class="links cl-effect-1">
-												<a href="manage-patient.php">
-<?php $result = mysqli_query($con,"SELECT * FROM tblpatient ");
-$num_rows = mysqli_num_rows($result);
-{
-?>
-Total Patients :<?php echo htmlentities($num_rows);  
-} ?>		
-</a>
-											</p>
-										</div>
-									</div>
-								</div>
-
-
-
-
-
-			<div class="col-sm-4">
-									<div class="panel panel-white no-radius text-center">
-										<div class="panel-body">
-											<span class="fa-stack fa-2x"> <i class="ti-files fa-1x text-primary"></i> <i class="fa fa-terminal fa-stack-1x fa-inverse"></i> </span>
-											<h2 class="StepTitle"> New Queries</h2>
-											
-											<p class="links cl-effect-1">
-												<a href="book-appointment.php">
-													<a href="unread-queries.php">
-												<?php 
-$sql= mysqli_query($con,"SELECT * FROM tblcontactus where  IsRead is null");
-$num_rows22 = mysqli_num_rows($sql);
-?>
-											Total New Queries :<?php echo htmlentities($num_rows22);   ?>	
-												</a>
-												</a>
-											</p>
-										</div>
-									</div>
-								</div>
-
-
-
 							</div>
 						</div>
-			
-					
-					
-						
-						
-					
+						<!-- end: BASIC EXAMPLE -->
 						<!-- end: SELECT BOXES -->
 						
 					</div>
@@ -182,7 +127,7 @@ $num_rows22 = mysqli_num_rows($sql);
 		
 			<!-- start: SETTINGS -->
 	<?php include('include/setting.php');?>
-			<>
+			
 			<!-- end: SETTINGS -->
 		</div>
 		<!-- start: MAIN JAVASCRIPTS -->

@@ -3,6 +3,8 @@ session_start();
 error_reporting(0);
 include('include/config.php');
 include('include/checklogin.php');
+check_login();
+$did=intval($_GET['id']);// get doctor id
 if(isset($_POST['submit']))
 {
 	$docspecialization=$_POST['Doctorspecialization'];
@@ -11,10 +13,10 @@ $docaddress=$_POST['clinicaddress'];
 $docfees=$_POST['docfees'];
 $doccontactno=$_POST['doccontact'];
 $docemail=$_POST['docemail'];
-$sql=mysqli_query($con,"Update doctors set specilization='$docspecialization',doctorName='$docname',address='$docaddress',docFees='$docfees',contactno='$doccontactno' where id='".$_SESSION['id']."'");
+$sql=mysqli_query($con,"Update doctors set specilization='$docspecialization',doctorName='$docname',address='$docaddress',docFees='$docfees',contactno='$doccontactno',docEmail='$docemail' where id='$did'");
 if($sql)
 {
-echo "<script>alert('Doctor Details updated Successfully');</script>";
+$msg="Doctor Details updated Successfully";
 
 }
 }
@@ -22,7 +24,7 @@ echo "<script>alert('Doctor Details updated Successfully');</script>";
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Doctr | Edit Doctor Details</title>
+		<title>Admin | Edit Doctor Details</title>
 		
 		<link href="http://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
@@ -45,18 +47,22 @@ echo "<script>alert('Doctor Details updated Successfully');</script>";
 		<div id="app">		
 <?php include('include/sidebar.php');?>
 			<div class="app-content">
-				<?php include('include/header.php');?>
+				
+						<?php include('include/header.php');?>
+						<!-- start: MENU TOGGLER FOR MOBILE DEVICES -->
+					
+				<!-- end: TOP NAVBAR -->
 				<div class="main-content" >
 					<div class="wrap-content container" id="container">
 						<!-- start: PAGE TITLE -->
 						<section id="page-title">
 							<div class="row">
 								<div class="col-sm-8">
-									<h1 class="mainTitle">Doctor | Edit Doctor Details</h1>
+									<h1 class="mainTitle">Admin | Edit Doctor Details</h1>
 																	</div>
 								<ol class="breadcrumb">
 									<li>
-										<span>Doctor</span>
+										<span>Admin</span>
 									</li>
 									<li class="active">
 										<span>Edit Doctor Details</span>
@@ -69,15 +75,16 @@ echo "<script>alert('Doctor Details updated Successfully');</script>";
 						<div class="container-fluid container-fullw bg-white">
 							<div class="row">
 								<div class="col-md-12">
-									
+									<h5 style="color: green; font-size:18px; ">
+<?php if($msg) { echo htmlentities($msg);}?> </h5>
 									<div class="row margin-top-30">
 										<div class="col-lg-8 col-md-12">
 											<div class="panel panel-white">
 												<div class="panel-heading">
-													<h5 class="panel-title">Edit Doctor</h5>
+													<h5 class="panel-title">Edit Doctor info</h5>
 												</div>
 												<div class="panel-body">
-									<?php $sql=mysqli_query($con,"select * from doctors where docEmail='".$_SESSION['dlogin']."'");
+									<?php $sql=mysqli_query($con,"select * from doctors where id='$did'");
 while($data=mysqli_fetch_array($sql))
 {
 ?>
@@ -158,9 +165,16 @@ while($row=mysqli_fetch_array($ret))
 											
 											</div>
 										</div>
-									
+									<div class="col-lg-12 col-md-12">
+											<div class="panel panel-white">
+												
+												
+											</div>
+										</div>
+									</div>
 								</div>
-							
+							</div>
+						</div>
 						<!-- end: BASIC EXAMPLE -->
 			
 					
